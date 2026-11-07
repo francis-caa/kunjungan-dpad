@@ -21,6 +21,7 @@ if (!isset($koneksi) || !($koneksi instanceof mysqli)) {
         die("Koneksi database gagal: " . mysqli_connect_error());
     }
     mysqli_set_charset($koneksi, 'utf8mb4');
+    mysqli_query($koneksi, "SET time_zone = '+07:00'"); // WIB
     // kembalikan ke perilaku bawaan PHP 8.1+ (error query dilempar sebagai exception)
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 }

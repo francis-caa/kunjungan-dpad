@@ -60,6 +60,10 @@
     {
       "source": "/export_pdf.php",
       "destination": "/api/index.php?p=export_pdf"
+    },
+    {
+      "source": "/export_excel_riwayat.php",
+      "destination": "/api/index.php?p=export_excel_riwayat"
     }
   ]
 }

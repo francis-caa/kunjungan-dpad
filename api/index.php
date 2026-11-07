@@ -4,7 +4,7 @@
 $halaman = [
     'login', 'logout', 'beranda', 'daftar_agenda', 'pemesanan_ruang',
     'agenda_bidang', 'riwayat_agenda', 'edit_agenda', 'hapus_agenda',
-    'profil', 'check_conflict', 'export_excel', 'export_pdf',
+    'profil', 'check_conflict', 'export_excel', 'export_excel_riwayat', 'export_pdf',
 ];
 
 $p = $_GET['p'] ?? 'login';
