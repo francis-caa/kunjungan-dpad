@@ -95,3 +95,24 @@ if (session_status() === PHP_SESSION_NONE) {
         'samesite' => 'Lax',
     ]);
 }
+
+// ---------------------------------------------------------------
+// Fungsi bantu password: mendukung bcrypt (baru) dan plaintext (lama).
+// Dipakai oleh login.php dan profil.php.
+// ---------------------------------------------------------------
+if (!function_exists('password_sudah_hash')) {
+    // True kalau password tersimpan sudah berbentuk hash bcrypt ($2y$...)
+    function password_sudah_hash(string $tersimpan): bool {
+        return strncmp($tersimpan, '$2y$', 4) === 0;
+    }
+}
+
+if (!function_exists('password_cocok')) {
+    // Cocokkan input dengan password tersimpan, baik bcrypt maupun plaintext lama
+    function password_cocok(string $input, string $tersimpan): bool {
+        if (password_sudah_hash($tersimpan)) {
+            return password_verify($input, $tersimpan);
+        }
+        return hash_equals($tersimpan, $input); // data lama (plaintext)
+    }
+}
