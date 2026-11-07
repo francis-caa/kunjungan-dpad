@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
-$koneksi = mysqli_connect("localhost", "root", "", "kunjungan");
+require_once __DIR__ . '/koneksi.php';
 if (!$koneksi) {
     echo json_encode(['bentrok' => 0]);
     exit;

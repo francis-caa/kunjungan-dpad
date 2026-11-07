@@ -1,5 +1,5 @@
 <?php
-$koneksi = mysqli_connect("localhost", "root", "", "kunjungan");
+require_once __DIR__ . '/koneksi.php';
 if (!$koneksi) {
     die("Koneksi gagal: " . mysqli_connect_error());
 }
