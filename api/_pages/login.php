@@ -18,8 +18,20 @@ if (isset($_POST['login'])) {
     if (mysqli_num_rows($result) === 1) {
         $data = mysqli_fetch_assoc($result);
 
-        // Bandingkan langsung (plaintext)
-        if ($password === $data['password']) {
+        // Verifikasi password (bcrypt; data lama plaintext tetap diterima)
+        if (password_cocok($password, $data['password'])) {
+            // Jika masih plaintext, otomatis di-hash (bcrypt) saat login berhasil
+            if (!password_sudah_hash($data['password'])) {
+                try {
+                    $hash_baru = password_hash($password, PASSWORD_BCRYPT);
+                    $up = mysqli_prepare($koneksi, "UPDATE admin SET password = ? WHERE id_admin = ?");
+                    mysqli_stmt_bind_param($up, "si", $hash_baru, $data['id_admin']);
+                    mysqli_stmt_execute($up);
+                    mysqli_stmt_close($up);
+                } catch (Throwable $e) {
+                    // jika gagal di-upgrade, login tetap dilanjutkan
+                }
+            }
             $_SESSION['id_admin']   = $data['id_admin'];
             $_SESSION['nama_admin'] = $data['nama_admin'];
             header("Location: beranda.php");
