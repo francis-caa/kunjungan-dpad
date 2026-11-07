@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['foto']) && !isset($_
     }
 }
 
-// Proses ubah password (PLAIN TEXT)
+// Proses ubah password (bcrypt)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_password'])) {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         $error = "Token keamanan tidak valid!";
@@ -96,16 +96,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_password'])) {
 
         if (empty($password_lama) || empty($password_baru) || empty($konfirmasi_password)) {
             $error = "Semua kolom kata sandi harus diisi!";
-        } elseif ($password_lama !== $stored_password) {
+        } elseif (!password_cocok($password_lama, $stored_password)) {
             $error = "Kata sandi lama salah!";
         } elseif ($password_baru !== $konfirmasi_password) {
             $error = "Konfirmasi kata sandi tidak cocok!";
         } elseif (strlen($password_baru) < 6) {
             $error = "Kata sandi baru minimal 6 karakter!";
         } else {
-            // Simpan password baru (plaintext)
+            // Simpan password baru (bcrypt)
+            $password_baru_hash = password_hash($password_baru, PASSWORD_BCRYPT);
             $stmt_update = mysqli_prepare($koneksi, "UPDATE admin SET password = ? WHERE id_admin = ?");
-            mysqli_stmt_bind_param($stmt_update, "si", $password_baru, $id_admin);
+            mysqli_stmt_bind_param($stmt_update, "si", $password_baru_hash, $id_admin);
 
             if (mysqli_stmt_execute($stmt_update)) {
                 $_SESSION['success'] = "Kata sandi berhasil diubah! Gunakan kata sandi baru untuk login berikutnya.";
