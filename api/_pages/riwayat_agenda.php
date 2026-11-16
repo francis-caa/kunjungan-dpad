@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/session_boot.php';
-// Aktifkan error reporting sementara (hapus setelah stabil)
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -526,6 +525,9 @@ $bulanIndo = [
 </aside>
 
 <main class="content">
+    <!-- JUDUL DIPINDAH KE ATAS -->
+    <h2>Riwayat Agenda</h2>
+
     <form method="GET" class="filter-wrapper">
         <div class="filter-left">
             <div class="filter-box">
@@ -573,8 +575,6 @@ $bulanIndo = [
 </a>
         </div>
     </form>
-
-    <h2>Riwayat Agenda</h2>
 
     <div class="table-box">
         <div class="table-scroll">
