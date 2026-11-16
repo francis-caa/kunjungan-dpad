@@ -27,22 +27,26 @@ if (!$data) {
 $query_ruangan = "SELECT id_ruangan, nama_ruangan FROM ruangan ORDER BY nama_ruangan ASC";
 $result_ruangan = mysqli_query($koneksi, $query_ruangan);
 
-// Ambil data untuk background (sama seperti agenda_bidang.php)
+// Ambil data untuk background (SAMA PERSIS dengan agenda_bidang.php)
 $ruangan = mysqli_query($koneksi, "SELECT id_ruangan, nama_ruangan FROM ruangan ORDER BY nama_ruangan ASC");
 $keyword = $_GET['cari'] ?? '';
-$tgl = $_GET['tgl'] ?? '';
+$tgl = $_GET['tgl'] ?? ''; // tetap dipakai untuk value input form (tidak dipakai di query BG)
 
 $sql = "
   SELECT ak.*, r.nama_ruangan
   FROM agenda_kunjungan ak
   JOIN ruangan r ON r.id_ruangan = ak.id_ruangan
   WHERE ak.bidang = '" . mysqli_real_escape_string($koneksi, $bidang_login) . "'
+    AND (
+        ak.tanggal > CURDATE() 
+        OR (
+            ak.tanggal = CURDATE() 
+            AND ak.waktu >= CURTIME()
+        )
+    )
 ";
 if ($keyword !== '') {
     $sql .= " AND ak.nama_kegiatan LIKE '%" . mysqli_real_escape_string($koneksi, $keyword) . "%'";
-}
-if ($tgl !== '') {
-    $sql .= " AND ak.tanggal = '" . mysqli_real_escape_string($koneksi, $tgl) . "'";
 }
 $sql .= " ORDER BY ak.tanggal ASC, ak.waktu_mulai ASC";
 $agenda = mysqli_query($koneksi, $sql);
